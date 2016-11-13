@@ -59,3 +59,24 @@ This will take you to the Proxy Overview page for your API Proxy:
 
 ![Image](images/orders-proxy-overview.png)
 
+Click on the << icon as shown above to collapse the expanded sidebar and reveal more of the API Proxy view. As also shown, you can navigate to the Develop tab to view the Proxy Editor. This is the view we will use to add new features and capabilities to our API:
+
+![Image](images/orders-proxy-develop-trace.png)
+
+Click on the Trace tab to open the Trace tool. Here we can verify that we can access our API through Apigee. Start by clicking on the *Start Trace Session* button:
+
+![Image](images/orders-proxy-trace-tab.png)
+
+Once the trace session has been started, Apigee Edge will automatically capture information on each API call made to your API proxy. Verify this is working by sending API calls as shown in the following screen captures:
+
+![Image](images/orders-proxy-trace-tab-2.png)
+
+![Image](images/orders-proxy-trace-tab-3.png)
+
+If you see your API calls displayed in the left panel and see a response code of 200 next to each call, congratulations, you've successfully created your first API proxy in Apigee Edge!
+
+# Up Next
+
+Now that you've successfully imported an API specification and used it to create an API Proxy you're ready to add features such as traffic management and security. 
+
+When you're ready, you can get started on [Lab 2 - Traffic Management and Basic Security](lab2.md).
