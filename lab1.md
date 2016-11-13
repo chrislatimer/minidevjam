@@ -25,11 +25,11 @@ Click on your spec to launch the spec editor tool. The spec editor allows you to
 
 In the editor pane, update the specification to provide a more descriptive title:
 
-![Image](images/order-spec-change-title.png) 
+![Image](images/orders-spec-change-title.png) 
 
 Click on the *Save* link to save the changes to your specification. Once the Spec has successfully saved, you can then create an API Proxy by clicking on the *Generate API Proxy* option:
 
-![Image](images/order-spec-editor.png)
+![Image](images/orders-spec-editor.png)
 
 This will launch the API Creation wizard that walks you through the process of creating an API Proxy. On the first form, give your API Proxy a name of `orders-rest-api` and specify a base path value of `/orders` then click next:
 
