@@ -33,29 +33,29 @@ Click on the *Save* link to save the changes to your specification. Once the Spe
 
 This will launch the API Creation wizard that walks you through the process of creating an API Proxy. On the first form, give your API Proxy a name of `orders-rest-api` and specify a base path value of `/orders` then click next:
 
-![Image](images/order-proxy-wizard-1.png)
+![Image](images/orders-proxy-wizard-1.png)
 
 The next screen will allow you to select a subset of the resources from the specification that you want to expose through your API proxy. Leave the default values and click next:
 
-![Image](images/order-proxy-wizard-2.png)
+![Image](images/orders-proxy-wizard-2.png)
 
 The next screen allows you to setup common security approaches and add CORS headers. Select the pass-through option and leave CORS unchecked:
 
-![Image](images/order-proxy-wizard-3.png)
+![Image](images/orders-proxy-wizard-3.png)
 
 The next screen allows you to map the API to certain virtual hosts. Your organization will have fewer virtual hosts than what are shown in the image. Just leave the default values and click next:
 
-![Image](images/order-proxy-wizard-4.png)
+![Image](images/orders-proxy-wizard-4.png)
 
 The final screen gives you an option to review your API Proxy configuration and deploy it to one or more environments. Leave the default values and click on *Build and Deploy*:
 
-![Image](images/order-proxy-wizard-5.png)
+![Image](images/orders-proxy-wizard-5.png)
 
 Once the API Proxy has been built and deployed, you will see a confirmation and a link to open the API Proxy for further development. Click on the *orders-rest-api* link:
 
-![Image](images/order-proxy-wizard-6.png)
+![Image](images/orders-proxy-wizard-6.png)
 
 This will take you to the Proxy Overview page for your API Proxy:
 
-![Image](images/order-proxy-overview.png)
+![Image](images/orders-proxy-overview.png)
 
