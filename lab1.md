@@ -73,7 +73,7 @@ Once the trace session has been started, Apigee Edge will automatically capture 
 
 ![Image](images/orders-proxy-trace-tab-3.png)
 
-If you see your API calls displayed in the left panel and see a response code of 200 next to each call, congratulations, you've successfully created your first API proxy in Apigee Edge!
+If you see your API calls displayed in the left panel and see a response code of 200 next to each call, congratulations, you've successfully created your first API proxy in Apigee Edge! You've also successfully completed lab 1!
 
 # Up Next
 
