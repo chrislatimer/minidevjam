@@ -25,3 +25,21 @@ Then scroll down to the Resources section and fill that out as shown:
 Click on the Save button to save your API Product. Once saved, it will appear in the list of API Products:
 
 ![Image](images/orders-product-4.png)
+
+You now have an API Product created, but no developers or applications who can use the product. To create a new developer, we'll navigate to the Developer management view by clicking on the *Developers* option in the left side nav bar:
+
+![Image](images/orders-developers-1.png)
+
+This will take you to the developer management page. Click on the *+Developer* button to create a new developer:
+
+![Image](images/orders-developers-2.png)
+
+When the new developer dialog appears, enter in your information to add yourself as a developer:
+
+![Image](images/orders-developers-3.png)
+
+After you save, you'll see yourself listed as a developer in your organization. In Apigee, API Keys are not assigned to a specific developer, but to a particular application which belongs to a specific developer. To obtain an API Key, we'll now need to create an application. Start by selecting the Apps option in the left side nav bar. 
+
+![Image](images/orders-app-1.png)
+
+
