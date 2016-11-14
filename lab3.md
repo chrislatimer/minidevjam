@@ -46,4 +46,18 @@ This will navigate you to the App management page. Create a new application by s
 
 ![Image](images/orders-app-1.png)
 
+This will reveal a form that you can use to create a new application. The form you see will look slightly different than what is shown here. That is because the screen capture shown below is from an Apigee instance which has monetization configured. Enter the details for your application, noting that you will not have the radio button option for developer and company. Simply find the developer you configured in the previous step and assign that developer as the owner of the new app:
+
+![Image](images/orders-app-2.png)
+
+Enter the fields as shown above and click on Save. Once saved, the new application will be shown in the apps list. Click on your application so that we can see its details and retrieve its API Key:
+
+![Image](images/orders-app-3.png)
+
+Once in the details view, click on the *Show* button in the Consumer Key field to reveal the API key for your new app:
+
+![Image](images/orders-app-4.png)
+
+Copy the API key to your computer's clipboard (You might want to save it off to a scratchpad somewhere for later reference just in case you copy something else to your clipboard).
+
 
