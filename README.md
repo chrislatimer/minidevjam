@@ -42,9 +42,7 @@ Welcome to the Apigee mini hands on DevJam workshop.
 
 # Hands on Labs
 
-1. [Getting Familiar with the API](lab1.md)
-2. [Exposing the API through Apigee Edge](lab2.md)
-3. [Throttling the API with Spike Arrest](lab3.md)
-4. [Improving API performance with Caching](lab4.md)
-5. [Complete reservation check in using the API](lab5.md)
+1. [Adding a new API Specification](lab1.md)
+2. [Traffic Management and Basic Security](lab2.md)
+3. [API Publishing and Consumption](lab3.md)
 
