@@ -51,3 +51,9 @@ Once you see the confirmation that your API Proxy was saved successfully, click 
 Just as before, click on the *Start Trace Session* button to start a trace session. Make another API call and verify that you get a 401 response indicating that the call is unauthorized. You can select your API call in the list on the left to verify that the API Key Validation policy rejected the API call due to a missing API key.
 
 ![Image](images/orders-apikey-trace-1.png)
+
+# Up Next
+
+Now that you've applied the Verify API Key policy to your API, we need to look at how you can grant access to your API. In the next lab, we'll show how you publish your API, configure a new application, and give that application access to your API. 
+
+When you're ready, you can get started on [Lab 3 - API Publishing and Consumption](lab3.md).
