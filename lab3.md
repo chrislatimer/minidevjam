@@ -60,4 +60,24 @@ Once in the details view, click on the *Show* button in the Consumer Key field t
 
 Copy the API key to your computer's clipboard (You might want to save it off to a scratchpad somewhere for later reference just in case you copy something else to your clipboard).
 
+With the API Key copied, navigate to the API Proxies list by clicking on the Develop icon in the left side nav bar then selecting API Proxies from the submenu:
 
+![Image](images/orders-test-apikey-1.png)
+
+This will navigate you to the list of API Proxies. Click on your API Proxy to open the API Proxy detail view:
+
+![Image](images/orders-test-apikey-2.png)
+
+Once you are in the detail view, navigate to the Trace tab:
+
+![Image](images/orders-test-apikey-3.png)
+
+In the trace tab, we will now verify that we can access our secured API by supplying the API Key. To do this, add a query parameter values of `?apikey=` followed by the API key that you copied to your clipboard:
+
+![Image](images/orders-test-apikey-3.png)
+
+Start a trace session and send a request. You should now successfully be able to make the API call without the Verify API Key policy rejecting your request.
+
+# Congrats!
+
+You have successfully completed this mini DevJam and scratched the surface of the capabilities of the platform. From here, you can check out the [product docs](http://docs.apigee.com/) or some of the [developer focussed videos](https://apigee.com/about/developers) that explain other features of the platform. 
