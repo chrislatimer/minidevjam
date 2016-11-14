@@ -40,6 +40,10 @@ When the new developer dialog appears, enter in your information to add yourself
 
 After you save, you'll see yourself listed as a developer in your organization. In Apigee, API Keys are not assigned to a specific developer, but to a particular application which belongs to a specific developer. To obtain an API Key, we'll now need to create an application. Start by selecting the Apps option in the left side nav bar. 
 
+![Image](images/orders-developer-4.png)
+
+This will navigate you to the App management page. Create a new application by selecting the *+App* button:
+
 ![Image](images/orders-app-1.png)
 
 
