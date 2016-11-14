@@ -26,7 +26,9 @@ Click on the Save button to save your API Product. Once saved, it will appear in
 
 ![Image](images/orders-product-4.png)
 
-You now have an API Product created, but no developers or applications who can use the product. To create a new developer, we'll navigate to the Developer management view by clicking on the *Developers* option in the left side nav bar:
+You now have an API Product created, but no developers or applications who can use the product. It's worth noting that developers and apps can be created in multiple ways. In this workshop, we're going to use the Edge Management UI to create a developer and an app. Many customers choose to leverage the self-service capabilities of the Edge developer portal to create developers and apps for their API program. 
+
+To create a new developer, navigate to the Developer management view by clicking on the *Developers* option in the left side nav bar:
 
 ![Image](images/orders-developer-1.png)
 
