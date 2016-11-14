@@ -29,3 +29,21 @@ Just as in lab 1, start a new trace session by clicking on the *Start Trace Sess
 After a few calls you should be able to observe that the API proxy starts to throttle your API calls:
 
 ![Image](images/orders-proxy-spike-trace-2.png)
+
+Note: One common question that gets asked is why the platform throttles traffic before you make 5 API calls. After all, you configured your Spike Arrest to allow 5 calls per minute, not 3! The answer is that Spike Arrest is used to shape traffic and start throttling based on the *frequency* of API calls, not the total number. To illustrate why, imagine that you had configured your Spike Arrest to limit traffic to 1,000 calls per minute. If you received all 1,000 calls in the first second, your backend may still choke on the sudden spike. Instead, Spike arrest will detect when calls start to exceed the configured frequency. In our case, a Spike Arrest with a rate of 5 per minute will start to throttle calls if more than 1 ever 12 seconds are received. For a specific allowable number of calls, you can use alternate policies such as Quota to allow a certain number of calls per second, minute, hour, etc regardless of how quickly they are made. 
+
+Once you've verified that the Spike Arrest is working correctly, switch back to the Develop tab to go back to the API Proxy editor. Once in the API Proxy Editor view, once again click on the top right *+Step* button:
+
+![Image](images/orders-apikey-editor-1.png)
+
+Scroll down to find the Verify API Key policy in the list, select it, then click on Add:
+
+![Image](images/orders-apikey-editor-2.png)
+
+Once the policy is added, drag it to the left of the Spike Arrest and then click on the blue Save button:
+
+![Image](images/orders-apikey-editor-3.png)
+
+Once you see the confirmation that your API Proxy was saved successfully, click on the trace tab so we can test the API Key Validation policy:
+
+![Image](images/orders-apikey-editor-4.png)
