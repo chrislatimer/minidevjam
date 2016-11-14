@@ -47,3 +47,7 @@ Once the policy is added, drag it to the left of the Spike Arrest and then click
 Once you see the confirmation that your API Proxy was saved successfully, click on the trace tab so we can test the API Key Validation policy:
 
 ![Image](images/orders-apikey-editor-4.png)
+
+Just as before, click on the *Start Trace Session* button to start a trace session. Make another API call and verify that you get a 401 response indicating that the call is unauthorized. You can select your API call in the list on the left to verify that the API Key Validation policy rejected the API call due to a missing API key.
+
+![Image](images/orders-apikey-trace-1.png)
