@@ -84,4 +84,4 @@ Start a trace session and send a request. You should now successfully be able to
 
 You have successfully completed this mini DevJam and scratched the surface of the capabilities of the platform. From here, you can check out the [product docs](http://docs.apigee.com/) or some of the [developer focussed videos](https://apigee.com/about/developers) that explain other features of the platform.
 
-For more hands on examples, check out the [self-paced full DevJam workshop](https://github.com/apigee/devjam).
+For more hands on examples, check out the [self-paced full DevJam workshop](https://github.com/apigee/devjam) or [self-paced hands on training](http://go.apigee.com/rg000Y1i0XRYDlWju00f0t0). [Webinar records of the hands-on training](https://www.youtube.com/playlist?list=PLIXjuPlujxxyfB7V-AdaeGiGCP6fSj1I_) are also available.
