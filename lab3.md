@@ -76,7 +76,7 @@ Once you are in the detail view, navigate to the Trace tab:
 
 In the trace tab, we will now verify that we can access our secured API by supplying the API Key. To do this, add a query parameter values of `?apikey=` followed by the API key that you copied to your clipboard:
 
-![Image](images/orders-test-apikey-3.png)
+![Image](images/orders-test-apikey-4.png)
 
 Start a trace session and send a request. You should now successfully be able to make the API call without the Verify API Key policy rejecting your request.
 
