@@ -114,13 +114,13 @@ Here's a brief description of the elements in this policy. You can read more abo
 Scroll down the policy list and select Service Callout and update the default display name to Call Geocoding API, select HTTP and then enter the HTTP Target with the following 
 URL:  [http://maps.googleapis.com/maps/api/geocode/json](http://maps.googleapis.com/maps/api/geocode/json)
 
-[Image](images/lab_appendix2/image06.png) 
+![Image](images/lab_appendix2/image06.png) 
 
 Then click on **Add** button.
 
 * Update the **Request** variable from myRequest to **GeoCodingRequest** and also update the **Response** variable from calloutResponse to **GeocodingResponse**.
 
-[Image](images/lab_appendix2/image07.png) 
+![Image](images/lab_appendix2/image07.png) 
 
 **<Request variable>** - This is the variable ‘GeoCodingRequest’ that was created in the AssignMessage policy in the previous step. It encapsulates the request going to the Google Geocoding API.
 
@@ -131,11 +131,11 @@ Then click on **Add** button.
 ### Use Extract Message Policy to parse the service callout response
 * Click on **+ Step**
 
-[Image](images/lab_appendix2/image08.png) 
+![Image](images/lab_appendix2/image08.png) 
 
 Scroll down the policy list and select **Extract Variables** and update the default display name to **Extract Geocodes**
 
-[Image](images/lab_appendix2/image09.png) 
+![Image](images/lab_appendix2/image09.png) 
 
 Then click on **Add**.
 
@@ -169,15 +169,15 @@ It may not be obvious, but it's important to see that ExtractVariables produces 
 
 * Click on **+ Step**
 
-[Image](images/lab_appendix2/image10.png) 
+![Image](images/lab_appendix2/image10.png) 
 
 Scroll down the policy list and select **Javascript** and update the default display name to **Create Location Query**, select **Create New Script** and then name it **Create-Location-Query.js**
 
-[Image](images/lab_appendix2/image11.png) 
+![Image](images/lab_appendix2/image11.png) 
 
 * Select the newly created script file and add the following code:
 
-[Image](images/lab_appendix2/image12.png) 
+![Image](images/lab_appendix2/image12.png) 
 
 ```
 var latitude = context.getVariable("geocodeResponse.latitude"),
@@ -203,11 +203,11 @@ You can read more about this policy in [Javascript policy](http://apigee.com/doc
 
 * Click on + Step
 
-[Image](images/lab_appendix2/image13.png) 
+![Image](images/lab_appendix2/image13.png) 
 
 Scroll down the policy list and select **Assign Message** and update the default display name to **Set Query Parameters**
 
-[Image](images/lab_appendix2/image14.png) 
+![Image](images/lab_appendix2/image14.png) 
 
 Update the policy to include the **baasQL** as a query parameter and remove the zipcode and radius query parameters from the request.
 
@@ -238,11 +238,11 @@ Here's a brief description of the elements that were modified in this policy. Yo
 
 * Click on the **Save** button to save and deploy the changes to the API Proxy.
 
-[Image](images/lab_appendix2/image15.png) 
+![Image](images/lab_appendix2/image15.png) 
 
 * Go to the ‘Trace’ tab and start a trace session by clicking the ‘Start Trace Session’ button
 
-[Image](images/lab_appendix2/image16.png) 
+![Image](images/lab_appendix2/image16.png) 
 
 * Using your browser or the Apigee REST Client, invoke the API with the following query parameter combinations and review the results being returned:
 -   zipcode=31721&radius=20000
