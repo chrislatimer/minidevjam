@@ -52,7 +52,7 @@ In this lab we will see how you can extend an existing API by aggregating it wit
 
 * Click on the **Develop** tab
 
-##Use an Assign Message Policy to prepare the service callout request
+###Use an Assign Message Policy to prepare the service callout request
 
 * Click on **+ Step**
 
@@ -60,7 +60,7 @@ In this lab we will see how you can extend an existing API by aggregating it wit
 
 Scroll down the policy list and select Assign Message and update the default display name to Create Geocoding Request. Then click on Add button.
 
-![Image](images/lab_appendix2/image02.png) 
+![Image](images/lab_appendix2/image04.png) 
 
 * Modify the policy to reflect a request with the appropriate query parameters for the Google Geolocation API.
 
@@ -104,21 +104,23 @@ Here's a brief description of the elements in this policy. You can read more abo
 
 **Note:** The properties associated with the ‘Assign Message’ policy could have been modified using the ‘Property Inspector’ panel that’s presented in the ‘Develop’ tab on the right. Any changes made in the ‘Code’ panel are reflected in the ‘Property Inspector’ panel and vice-versa. We will use the ‘Property Inspector’ panel to set properties for some of the policies as the lesson progresses.
 
-## Use Service Callout Policy to invoke the Google GeoCoding API
+### Use Service Callout Policy to invoke the Google GeoCoding API
 
 
 * Click on **+ Step**
 
-[Image](images/lab_appendix2/image03.png) 
+[Image](images/lab_appendix2/image05.png) 
 
 Scroll down the policy list and select Service Callout and update the default display name to Call Geocoding API, select HTTP and then enter the HTTP Target with the following 
 URL:  [http://maps.googleapis.com/maps/api/geocode/json](http://maps.googleapis.com/maps/api/geocode/json)
 
-[Image](images/lab_appendix2/image04.png) 
+[Image](images/lab_appendix2/image06.png) 
 
 Then click on **Add** button.
 
 * Update the **Request** variable from myRequest to **GeoCodingRequest** and also update the **Response** variable from calloutResponse to **GeocodingResponse**.
+
+[Image](images/lab_appendix2/image07.png) 
 
 **<Request variable>** - This is the variable ‘GeoCodingRequest’ that was created in the AssignMessage policy in the previous step. It encapsulates the request going to the Google Geocoding API.
 
@@ -126,14 +128,14 @@ Then click on **Add** button.
 
 **<HTTPTargetConnection><URL>** - Specifies the target URL to be used by the service callout - in this case the URL of the Google Geocoding API: http://maps.googleapis.com/maps/api/geocode/json
 
-## Use Extract Message Policy to parse the service callout response
+### Use Extract Message Policy to parse the service callout response
 * Click on **+ Step**
 
-[Image](images/lab_appendix2/image05.png) 
+[Image](images/lab_appendix2/image08.png) 
 
 Scroll down the policy list and select **Extract Variables** and update the default display name to **Extract Geocodes**
 
-[Image](images/lab_appendix2/image06.png) 
+[Image](images/lab_appendix2/image09.png) 
 
 Then click on **Add**.
 
@@ -156,26 +158,26 @@ Then click on **Add**.
 </ExtractVariables>
 ```
 
-Here's a brief description of the elements that were modified in this policy. You can read more about this policy in Extract Variables policy.
+Here's a brief description of the elements that were modified in this policy. You can read more about this policy in [Extract Variables policy](https://www.google.com/url?q=http://apigee.com/docs/api-services/reference/extract-variables-policy&sa=D&ust=1484850149928000&usg=AFQjCNEvSjBrn8xBtS20uEMnXVkmp3tGIA).
 - Specifies the response variable ‘GeoCodingResponse’ that we created in the ServiceCallout policy. This is the variable from which this policy extracts data.
-- The variable prefix ‘geocodeResponse’ specifies a namespace for other variables created in this policy. The prefix can be any name, except for the reserved names defined by the Apigee Edge Platform's predefined variables.
-- This element retrieves the response data that is of interest and puts it into named variables. In fact, the Google Geocoding API returns much more information than latitude and longitude. However, these are the only values needed for these lessons. You can see a complete rendering of the JSON in the Google Geocoding API documentation. The values of geometry.location.lat and geometry.location.lng are simply two of the many fields in the returned JSON object.
+- The variable prefix ‘geocodeResponse’ specifies a namespace for other variables created in this policy. The prefix can be any name, except for the reserved names defined by the [Apigee Edge Platform's predefined variables](https://www.google.com/url?q=http://apigee.com/docs/api-platform/api/variables-reference&sa=D&ust=1484850149930000&usg=AFQjCNFJBZO91HDuovPquvIspytNr8VE2A).
+- This element retrieves the response data that is of interest and puts it into named variables. In fact, the Google Geocoding API returns much more information than latitude and longitude. However, these are the only values needed for these lessons. You can see a complete rendering of the JSON in the [Google Geocoding API documentation](https://www.google.com/url?q=https://developers.google.com/maps/documentation/geocoding/&sa=D&ust=1484850149931000&usg=AFQjCNHRHGwYcNg8Py-7kW7HVu5LFmS5eg). The values of geometry.location.lat and geometry.location.lng are simply two of the many fields in the returned JSON object.
 
 It may not be obvious, but it's important to see that ExtractVariables produces two variables whose names consist of the variable prefix (geocodeResponse) and the actual variable names that are specified in the policy. These variables are stored in the API proxy and will be available to other policies within the proxy flow, as you will see. The variables are: geocodeResponse.latitude & geocodeResponse.longitude
 
-## Use the Javascript Policy to create the Location Query to send to the BaaS target endpoint
+### Use the Javascript Policy to create the Location Query to send to the BaaS target endpoint
 
 * Click on **+ Step**
 
-[Image](images/lab_appendix2/image07.png) 
+[Image](images/lab_appendix2/image10.png) 
 
 Scroll down the policy list and select **Javascript** and update the default display name to **Create Location Query**, select **Create New Script** and then name it **Create-Location-Query.js**
 
-[Image](images/lab_appendix2/image08.png) 
+[Image](images/lab_appendix2/image11.png) 
 
 * Select the newly created script file and add the following code:
 
-[Image](images/lab_appendix2/image09.png) 
+[Image](images/lab_appendix2/image12.png) 
 
 ```
 var latitude = context.getVariable("geocodeResponse.latitude"),
@@ -197,15 +199,15 @@ It sets a default in case the variables are empty strings, creates a new query v
 You can read more about this policy in [Javascript policy](http://apigee.com/docs/api-services/reference/javascript-policy).
 
 
-## Use the Assign Message Policy to add the Location Query to the query parameter before BaaS target endpoint invocation
+### Use the Assign Message Policy to add the Location Query to the query parameter before BaaS target endpoint invocation
 
 * Click on + Step
 
-[Image](images/lab_appendix2/image10.png) 
+[Image](images/lab_appendix2/image13.png) 
 
 Scroll down the policy list and select **Assign Message** and update the default display name to **Set Query Parameters**
 
-[Image](images/lab_appendix2/image11.png) 
+[Image](images/lab_appendix2/image14.png) 
 
 Update the policy to include the **baasQL** as a query parameter and remove the zipcode and radius query parameters from the request.
 
@@ -232,15 +234,15 @@ Here's a brief description of the elements that were modified in this policy. Yo
 - Removes the query parameters (‘zipcode’ and ‘radius’) that were sent in the original client request to the API Proxy.
 - Adds a new query parameter (‘ql’) with the variable ‘baasQL’ providing the actual value. Note that the ‘baasQL’ variable was set by the previous Javascript policy as part of the ‘context’ object
 
-## Testing the API Proxy with the location query after deploying changes
+### Testing the API Proxy with the location query after deploying changes
 
 * Click on the **Save** button to save and deploy the changes to the API Proxy.
 
-[Image](images/lab_appendix2/image12.png) 
+[Image](images/lab_appendix2/image15.png) 
 
 * Go to the ‘Trace’ tab and start a trace session by clicking the ‘Start Trace Session’ button
 
-[Image](images/lab_appendix2/image13.png) 
+[Image](images/lab_appendix2/image16.png) 
 
 * Using your browser or the Apigee REST Client, invoke the API with the following query parameter combinations and review the results being returned:
 -   zipcode=31721&radius=20000
