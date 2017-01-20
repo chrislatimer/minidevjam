@@ -31,7 +31,7 @@ Click on the *Save* link to save the changes to your specification. Once the Spe
 
 ![Image](images/orders-spec-editor.png)
 
-This will launch the API Creation wizard that walks you through the process of creating an API Proxy. On the first form, give your API Proxy a name of `orders-rest-api` and specify a base path value of `/orders` then click next:
+This will launch the API Creation wizard that walks you through the process of creating an API Proxy. On the first form, give your API Proxy a name of `{yourLDAP}-orders-rest-api` and specify a base path value of `/{yourldap}-orders` then click next:
 
 ![Image](images/orders-proxy-wizard-1.png)
 
