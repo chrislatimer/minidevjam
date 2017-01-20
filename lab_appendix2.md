@@ -1,8 +1,8 @@
 # Lab Appendix 2- Create a Mashup with APIs
 
-As a member of the API team, you would like to aggregate multiple APIs, in this case the Employee API and Google Geolocation API, into a single interface for ease of consumability for your App Developers when searching for employees located within a certain distance of a given location.
+As a member of the API team, you would like to aggregate multiple APIs, in this case the Order API and Google Geolocation API, into a single interface for ease of consumability for your App Developers when searching for employees located within a certain distance of a given location.
 
-The goal is to have the proxy perform a geolocation query against our Employee data collection to return results within a certain radius of a zip code.
+The goal is to have the proxy perform a geolocation query against our Order data collection to return results within a certain radius of a zip code.
 API BaaS supports the ability to retrieve entities within a specified distance of any geocoordinate based on its location property:
 
 ```
@@ -26,7 +26,7 @@ For the service callout to convert the zipcode to the geocoordinate, you will us
 ##How can Apigee Edge help?
 Apigee Edge enables you to design API behavior by using the out of the box policie'. A policy is like a module that implements a specific, limited management function. Policies are designed to let you add common types of management capabilities to an API easily and reliably.
 
-In this lab we will see how you can extend an existing API by aggregating it with another API and creating a single interface for your App Developers to consume. In this example, we will be combining data from our Employee API with the Google Weather to have a single response of the employee information and weather for their location. We will discover and use the following types of policies:
+In this lab we will see how you can extend an existing API by aggregating it with another API and creating a single interface for your App Developers to consume. In this example, we will be combining data from our Order API with the Google Weather to have a single response of the order information and weather for their location. We will discover and use the following types of policies:
 
 **Traffic Management Policies** in the traffic management category enable you to control the flow of request and response messages through an API proxy. These policies support both operational- and business-level control. They give you control over raw throughput, and can also control traffic on a per-app basis. Traffic management policy types enable you to enforce quotas, and they also help you to mitigate denial of service attacks.
 
