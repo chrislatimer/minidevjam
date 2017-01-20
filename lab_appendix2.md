@@ -245,9 +245,9 @@ Here's a brief description of the elements that were modified in this policy. Yo
 ![Image](images/lab_appendix2/image16.png) 
 
 * Using your browser or the Apigee REST Client, invoke the API with the following query parameter combinations and review the results being returned:
->   zipcode=31721&radius=20000
->   zipcode=31721&radius=500000
->   No query parameters
+	*   zipcode=31721&radius=20000
+	*   zipcode=31721&radius=500000
+	*   No query parameters
 
 **\*\*Note: radius is measured in meters**
 
