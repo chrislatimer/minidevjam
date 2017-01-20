@@ -29,7 +29,7 @@ In this lab, you will create a custom report to provide insight into the consump
 
 ![Image](images/lab_appendix1/image01.png)
 
-* Enter the **Report Name** and **Report Description**.
+* Enter the **Report Name**, for clarity prefix it with your ldap name. Optionally,enter a **Report Description**.
 
 ![Image](images/lab_appendix1/image02.png) 
 

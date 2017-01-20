@@ -1,4 +1,4 @@
-# Lab Appendix 2- Create a Mashup with APIs (Composite APIs)
+# Lab Appendix 2- Create a Mashup with APIs
 
 As a member of the API team, you would like to aggregate multiple APIs, in this case the Employee API and Google Geolocation API, into a single interface for ease of consumability for your App Developers when searching for employees located within a certain distance of a given location.
 
@@ -10,7 +10,7 @@ location within {distance_in_meters} of {latitude},{longitude}
 ```
 
 As you can see, you need to provide the latitude and longitude information to perform the query.
-For mobile applications meant for smartphones, obtaining geocode information is easy and can be provided dir￿ectly as part of an API call. For this lesson, assume that this API interface is being created for devices and applications that cannot easily provide the geocoordinate information, but simply requests the user to provide the zip code. In such a situation, the first thing is to obtain the geo-coordinates for the zip code provided before doing further processing. Below are the high level steps to implement this in the proxy:
+For mobile applications meant for smartphones, obtaining geocode information is easy and can be provided directly as part of an API call. For this lesson, assume that this API interface is being created for devices and applications that cannot easily provide the geocoordinate information, but simply requests the user to provide the zip code. In such a situation, the first thing is to obtain the geo-coordinates for the zip code provided before doing further processing. Below are the high level steps to implement this in the proxy:
 * Retrieve the zipcode and radius from the request query parameters
 * Use the zipcode as an input parameter to call an external service that converts the zipcode to the geo-coordinates
 * Extract the latitude and longitude geo-coordinates information from the response of the external service call
@@ -40,13 +40,13 @@ In this lab we will see how you can extend an existing API by aggregating it wit
 * An existing API proxy
 
 ##Instructions
-###Select existing Employees API
+###Select existing Orders API
 * Go to [https://apigee.com/edge](https://apigee.com/edge) and log in. This is the Edge management UI. 
 * Select **Develop → API Proxies** in the side navigation menu.
 
 ![Image](images/lab_appendix2/image01.png) 
 
-* Click on the proxy you created in the lab titled **API Design - Create a Reverse Proxy with OpenAPI specification**
+* Click on the proxy you created in the [Lab 1 - Adding a new API Specification](lab1.md).
 
 ![Image](images/lab_appendix2/image02.png) 
 
@@ -232,7 +232,7 @@ Update the policy to include the **baasQL** as a query parameter and remove the 
 
 Here's a brief description of the elements that were modified in this policy. You can read more about this policy in [Extract Variables policy](http://apigee.com/docs/api-services/reference/extract-variables-policy).
 - Removes the query parameters (‘zipcode’ and ‘radius’) that were sent in the original client request to the API Proxy.
-- Adds a new query parameter (‘ql’) with the variable ‘baasQL’ providing the actual value. Note that the ‘baasQL’ variable was set by the previous Javascript policy as part of the ‘context’ object
+- Adds a new query parameter (‘**ql**’) with the variable **baasQL** providing the actual value. Note that the **baasQL** variable was set by the previous Javascript policy as part of the **context** object
 
 ### Testing the API Proxy with the location query after deploying changes
 
@@ -240,7 +240,7 @@ Here's a brief description of the elements that were modified in this policy. Yo
 
 ![Image](images/lab_appendix2/image15.png) 
 
-* Go to the ‘Trace’ tab and start a trace session by clicking the ‘Start Trace Session’ button
+* Go to the **Trace** tab and start a trace session by clicking the ‘Start Trace Session’ button
 
 ![Image](images/lab_appendix2/image16.png) 
 
