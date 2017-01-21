@@ -1,254 +1,171 @@
-# Lab Appendix 2- Create a Mashup with APIs
+# Lab Appendix 2- Caching
 
-As a member of the API team, you would like to aggregate multiple APIs, in this case the Order API and Google Geolocation API, into a single interface for ease of consumability for your App Developers when searching for employees located within a certain distance of a given location.
+##Use case
+You just launched your app -- and it’s a hit!  One of your backend services is swamped, responding slowly and damaging the end-user experience. Since the information returned by this service does not change frequently, it’s a perfect candidate for caching.  Your team decides to improve performance by implementing caching for this service in your API layer. 
+How can Apigee Edge help?
+Apigee Edge provides caching for runtime persistence of data across requests.  You may access the cache with policies (see chart below).  Apigee Edge supports different caching policies enabling you to:
 
-The goal is to have the proxy perform a geolocation query against our Order data collection to return results within a certain radius of a zip code.
-API BaaS supports the ability to retrieve entities within a specified distance of any geocoordinate based on its location property:
+* **Reduce latency**: A request satisfied from the cache gets the representation and displays it in a shorter time. The server is more responsive with requests satisfied from the cache, which is closer to the client than the origin server.
+* **Reduce network traffic**: Representations are reused, reducing the impact of processing duplicate or redundant requests. Using a cache also reduces the amount of bandwidth you use.
+* **Persist data across transactions**: You can store session data for reuse across HTTP transactions.
+* **Support security**: You may need "scope" access to the contents of a cache so it can only be accessed in a particular environment or by a specific API proxy.
 
-```
-location within {distance_in_meters} of {latitude},{longitude}
-```
+Here’s a breakdown of the Apigee Edge caching policies:
 
-As you can see, you need to provide the latitude and longitude information to perform the query.
-For mobile applications meant for smartphones, obtaining geocode information is easy and can be provided directly as part of an API call. For this lesson, assume that this API interface is being created for devices and applications that cannot easily provide the geocoordinate information, but simply requests the user to provide the zip code. In such a situation, the first thing is to obtain the geo-coordinates for the zip code provided before doing further processing. Below are the high level steps to implement this in the proxy:
-* Retrieve the zipcode and radius from the request query parameters
-* Use the zipcode as an input parameter to call an external service that converts the zipcode to the geo-coordinates
-* Extract the latitude and longitude geo-coordinates information from the response of the external service call
-* Use the geo-coordinates to create the geo-location query
-* Add the location query as a query parameter before the target BaaS service is invoked
+| Policy Name     | What Does it Do?|
+|-----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ResponseCache   | Uses a cache to cache the response from the backend resource. This reduces the number of requests to the resource. When the response is already available in cache, it is returned directly by Edge, without contacting the backend. [ResponseCache policy](http://apigee.com/docs/api-services/reference/response-cache-policy).|
+| PopulateCache   | Write arbitrary data, not necessarily response content, to the cache. You can use composite keys for the cache, so that you could cache user information, client information, Nonces, and so on. Each cache item can be tagged with an individual Time-to-Live, so data can be available for 10 seconds or 10 hours or 10 days, etc. [PopulateCache](http://apigee.com/docs/api-services/reference/populate-cache-policy). |
+| LookupCache     | Retrieve values that have been cached with the PopulateCache policy. [LookupCache](http://apigee.com/docs/api-services/reference/lookup-cache-policy).|
+| InvalidateCache | Purges values that have been cached by PopulateCache. [Invalidate Cache policy](http://apigee.com/docs/api-services/reference/invalidate-cache-policy).|
 
-A pictorial representation of the logic is depicted below:
+In this lab, we will configure your proxy to cache the results of a request for 60 seconds at a time.  Once we’ve seen how this affects runtime performance, we’ll leverage the cache a different way -- explicitly defining the cache key and contents.  We’ll populate this cache with an employee ID and demonstrate how to retrieve this value from cache with a LookupCache policy. 
+
+##Pre-requisites
+* You have an API proxy created in Apigee Edge. If not, jump back to “**Creating an API proxy**” lab.
+
+## Instructions
+###Part 1 - Response Cache Policy
+* Go to [https://apigee.com/edge](https://apigee.com/edge) and log in. This is the Edge management UI. 
+* Select **Develop → API Proxies** in the side navigation menu
 
 ![Image](images/lab_appendix2/image00.png) 
 
-For the service callout to convert the zipcode to the geocoordinate, you will use the [Google GeoCoding API](https://developers.google.com/maps/documentation/geocoding/).
-
-##How can Apigee Edge help?
-Apigee Edge enables you to design API behavior by using the out of the box policie'. A policy is like a module that implements a specific, limited management function. Policies are designed to let you add common types of management capabilities to an API easily and reliably.
-
-In this lab we will see how you can extend an existing API by aggregating it with another API and creating a single interface for your App Developers to consume. In this example, we will be combining data from our Order API with the Google Weather to have a single response of the order information and weather for their location. We will discover and use the following types of policies:
-
-**Traffic Management Policies** in the traffic management category enable you to control the flow of request and response messages through an API proxy. These policies support both operational- and business-level control. They give you control over raw throughput, and can also control traffic on a per-app basis. Traffic management policy types enable you to enforce quotas, and they also help you to mitigate denial of service attacks.
-
-**Mediation Policies** in the mediation category enable you to actively manipulate messages as they flow through API proxies. They enable you to transform message formats, from XML to JSON (and vice-versa), or to transform one XML format to another XML format. They also enable you to parse messages, to generate new messages and to change values on outbound messages. Mediation policies also interact with basic services exposed by API Services, enabling you to retrieve data about apps, developers, security tokens, and API products at runtime.
-
-**Security Policies** in the security category support authentication, authorization, as well as content-based security.
-
-**Extension Policies** in the extension category enable you to tap into the extensibility of API Services to implement custom behavior in the programming language of your choice.
-
-##Pre-requisites
-* An existing API proxy
-
-##Instructions
-###Select existing Orders API
-* Go to [https://apigee.com/edge](https://apigee.com/edge) and log in. This is the Edge management UI. 
-* Select **Develop → API Proxies** in the side navigation menu.
+* Select the **{your_initials}_employee_api_proxy** that you created in an earlier lab exercise.	
 
 ![Image](images/lab_appendix2/image01.png) 
-
-* Click on the proxy you created in the [Lab 1 - Adding a new API Specification](lab1.md).
+	
+* Click on the **Develop** tab to access the API Proxy development dashboard.
 
 ![Image](images/lab_appendix2/image02.png) 
 
-* Click on the **Develop** tab
+* Click on **Pre Flow** under Proxy Endpoints, then click **+ Step** on the Request flow to attach a *Response Cache* policy.
 
-###Use an Assign Message Policy to prepare the service callout request
+![Image](images/lab_appendix2/image03.png) 		
 
-* Click on **+ Step**
+* Select **Response Cache**, rename to something descriptive like “Cache for Employees” and click on the **Add** button to add the Response Cache policy.
+	
+![Image](images/lab_appendix2/image04.png) 		
 
-![Image](images/lab_appendix2/image03.png) 
-
-Scroll down the policy list and select Assign Message and update the default display name to Create Geocoding Request. Then click on Add button.
-
-![Image](images/lab_appendix2/image04.png) 
-
-* Modify the policy to reflect a request with the appropriate query parameters for the Google Geolocation API.
+* The default configuration for this policy looks like the following:
 
 ```
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<AssignMessage async="false" continueOnError="false" enabled="true" name="Create-Geocoding-Request">
-    <DisplayName>Create Geocoding Request</DisplayName>
-    <AssignTo createNew="true" type="request">GeoCodingRequest</AssignTo>
-    <Set>
-        <QueryParams>
-            <QueryParam name="address">{request.queryparam.zipcode}</QueryParam>
-            <QueryParam name="region">US</QueryParam>
-            <QueryParam name="sensor">false</QueryParam>
-        </QueryParams>
-        <Verb>GET</Verb>
-    </Set>
-    <!-- Set variables for use in the flow -->
-    <AssignVariable>
-        <Name>zipcode</Name>
-        <Ref>request.queryparam.zipcode</Ref>
-    </AssignVariable>
-    <AssignVariable>
-        <Name>radius</Name>
-        <Value>0</Value>
-        <Ref>request.queryparam.radius</Ref>
-    </AssignVariable>
-</AssignMessage>
+<ResponseCache async="false" continueOnError="false" enabled="true" name="Cache-for-Employees">
+    <DisplayName>Cache for Employees</DisplayName>
+    <Properties/>
+    <CacheKey>
+        <Prefix/>
+        <KeyFragment ref="request.uri" type="string"/>
+    </CacheKey>
+    <Scope>Exclusive</Scope>
+    <ExpirySettings>
+        <ExpiryDate/>
+        <TimeOfDay/>
+        <TimeoutInSec ref="">3600</TimeoutInSec>
+    </ExpirySettings>
+    <SkipCacheLookup/>
+    <SkipCachePopulation/>
+</ResponseCache>
 ```
 
-Here's a brief description of the elements in this policy. You can read more about this policy in Assign Message policy.
+* This stipulates that the cache should timeout after 3600 seconds, or one hour.  Change this to read ‘60’.  This way, your cache will expire in one minute.
 
-**<AssignMessage name>** - Gives this policy a name. The name is used when the policy is referenced in a flow.
+![Image](images/lab_appendix2/image05.png) 
 
-**<AssignTo>** - Creates a named variable called ’GeoCodingRequest’of type ‘Request’. This variable encapsulates the request object that will be sent by the ServiceCallout policy.
+**A Quick Note on Cache Expiry, Resources**
+The expiry settings are quite flexible. You could, for example, set the expiry to a particular time of day - say 3:00am Pacific time each day. This allows you to hold a cache all day, and refresh it at the beginning of each day, for example. For more information, see [the cache documentation](http://apigee.com/docs/api-services/reference/response-cache-policy). 
 
-**<Set><QueryParams>** - Sets the query parameters that are needed for the service callout API call. In this case, the Google Geocoding API needs to know the location, which is expressed with a zipcode. The API calling client supplies this information, and we simply extract it here. The region and sensor parameters are by the API, and we just hardcode it to certain values here.
+Apigee Edge provides a default cache resource that can be used for quick testing, which is what is being used in this lesson. Cache policies like ResponseCache can also used named cache resources. A Named cache resource can be manipulated administratively, outside of policy control. For examine, if you would like to clear a cache administratively, you can do that with a named cache resource. It takes just a moment. For more information on Cache Resources, see [Manage Caches for an Environment](http://apigee.com/docs/api-services/content/manage-caches-environment).
 
-**<Verb>** - In this case, we are making a simple GET request to the API.
-
-**<AssignVariable>** - zipcode and radius are new variables being created to store values being passed to the API. In this example, the variables will be accessed later in the proxy flow.
-
-**Note:** The properties associated with the ‘Assign Message’ policy could have been modified using the ‘Property Inspector’ panel that’s presented in the ‘Develop’ tab on the right. Any changes made in the ‘Code’ panel are reflected in the ‘Property Inspector’ panel and vice-versa. We will use the ‘Property Inspector’ panel to set properties for some of the policies as the lesson progresses.
-
-### Use Service Callout Policy to invoke the Google GeoCoding API
-
-
-* Click on **+ Step**
-
-[Image](images/lab_appendix2/image05.png) 
-
-Scroll down the policy list and select Service Callout and update the default display name to Call Geocoding API, select HTTP and then enter the HTTP Target with the following 
-URL:  [http://maps.googleapis.com/maps/api/geocode/json](http://maps.googleapis.com/maps/api/geocode/json)
+* Click Target Endpoints → default → PostFlow.  Verify your cache policy appears here, as well -- on the Response side.  Then, save your proxy and wait for it to successfully deploy.
 
 ![Image](images/lab_appendix2/image06.png) 
 
-Then click on **Add** button.
+	
+* Switch to the **Trace** tab.  We’ll use this to test the caching we just configured for our proxy.  For more on Trace, see the Diagnostics - API Trace lab.  
+* Start a new trace session and click **Send** multiple times (two or three) to fire a few test requests.
+	
+* Note the difference between your first request and subsequent requests made within 60 seconds of the first (remember, this is the lifetime defined for your cache).  A few things should jump out at you:
+	* Response times reduced with cache.
+	![Image](images/lab_appendix2/image07.png) 
 
-* Update the **Request** variable from myRequest to **GeoCodingRequest** and also update the **Response** variable from calloutResponse to **GeocodingResponse**.
+	* Trace graph shows a response generated **in the gateway, from cache** -- eliminating the need to forward these requests to the target backend.
+	![Image](images/lab_appendix2/image08.png) 
+		
 
-![Image](images/lab_appendix2/image07.png) 
+* Well done!  You’ve added a general purpose cache which will survive for 60 seconds, before repopulating on the next request made after that window.  Responses generated from cache spare your backend from serving those requests -- and are returned to clients far quicker than would non-cached responses.
 
-**<Request variable>** - This is the variable ‘GeoCodingRequest’ that was created in the AssignMessage policy in the previous step. It encapsulates the request going to the Google Geocoding API.
+## Part 2 - Populate Cache, Lookup Cache
+You’ve improved the performance of your API with some clever caching of employee information.  Let’s take things a step further.  There may be times when saving a bit of metadata (unrelated to response payload) to cache can be useful.  In this section of the lab, we’ll capture the path -- which includes employee ID -- as specific employee records are requested.  Then, we’ll show how to retrieve this cached path info with a simple Lookup Cache policy.
 
-**<Response>** - This element names a variable ‘GeoCodingResponse’ in which the response from the Google Geocoding API will be stored. As you will see, this variable will be accessed later by the ExtractVariables policy.
-
-**<HTTPTargetConnection><URL>** - Specifies the target URL to be used by the service callout - in this case the URL of the Google Geocoding API: http://maps.googleapis.com/maps/api/geocode/json
-
-### Use Extract Message Policy to parse the service callout response
-* Click on **+ Step**
-
-![Image](images/lab_appendix2/image08.png) 
-
-Scroll down the policy list and select **Extract Variables** and update the default display name to **Extract Geocodes**
+* Return to the **Develop** tab to access the API Proxy development dashboard.
+* Change the expiry time on your Response Cache policy to 1s.  This will allow us to make multiple requests for Part II of the lab without triggering a cached response from our Part I work.
 
 ![Image](images/lab_appendix2/image09.png) 
 
-Then click on **Add**.
-
-* Update the policy to parse the **GeoCodingResponse** and store the results in variables.
-
-```
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<ExtractVariables async="false" continueOnError="false" enabled="true" name="Extract-Geocodes">
-    <DisplayName>Extract Geocodes</DisplayName>
-    <Source>GeoCodingResponse</Source>
-    <VariablePrefix>geocodeResponse</VariablePrefix>
-    <JSONPayload>
-        <Variable name="latitude">
-            <JSONPath>$.results[0].geometry.location.lat</JSONPath>
-        </Variable>
-        <Variable name="longitude">
-            <JSONPath>$.results[0].geometry.location.lng</JSONPath>
-        </Variable>
-    </JSONPayload>
-</ExtractVariables>
-```
-
-Here's a brief description of the elements that were modified in this policy. You can read more about this policy in [Extract Variables policy](https://www.google.com/url?q=http://apigee.com/docs/api-services/reference/extract-variables-policy&sa=D&ust=1484850149928000&usg=AFQjCNEvSjBrn8xBtS20uEMnXVkmp3tGIA).
-- Specifies the response variable ‘GeoCodingResponse’ that we created in the ServiceCallout policy. This is the variable from which this policy extracts data.
-- The variable prefix ‘geocodeResponse’ specifies a namespace for other variables created in this policy. The prefix can be any name, except for the reserved names defined by the [Apigee Edge Platform's predefined variables](https://www.google.com/url?q=http://apigee.com/docs/api-platform/api/variables-reference&sa=D&ust=1484850149930000&usg=AFQjCNFJBZO91HDuovPquvIspytNr8VE2A).
-- This element retrieves the response data that is of interest and puts it into named variables. In fact, the Google Geocoding API returns much more information than latitude and longitude. However, these are the only values needed for these lessons. You can see a complete rendering of the JSON in the [Google Geocoding API documentation](https://www.google.com/url?q=https://developers.google.com/maps/documentation/geocoding/&sa=D&ust=1484850149931000&usg=AFQjCNHRHGwYcNg8Py-7kW7HVu5LFmS5eg). The values of geometry.location.lat and geometry.location.lng are simply two of the many fields in the returned JSON object.
-
-It may not be obvious, but it's important to see that ExtractVariables produces two variables whose names consist of the variable prefix (geocodeResponse) and the actual variable names that are specified in the policy. These variables are stored in the API proxy and will be available to other policies within the proxy flow, as you will see. The variables are: geocodeResponse.latitude & geocodeResponse.longitude
-
-### Use the Javascript Policy to create the Location Query to send to the BaaS target endpoint
-
-* Click on **+ Step**
+* Click Proxy Endpoints → default → Get an Employee with given UUID.
 
 ![Image](images/lab_appendix2/image10.png) 
 
-Scroll down the policy list and select **Javascript** and update the default display name to **Create Location Query**, select **Create New Script** and then name it **Create-Location-Query.js**
+* Click **+Step** on the **Request** side
 
 ![Image](images/lab_appendix2/image11.png) 
 
-* Select the newly created script file and add the following code:
-
+* Add a **Populate Cache** policy, changing the name to Populate ID
 ![Image](images/lab_appendix2/image12.png) 
 
+**What have we done here?**
+We’ve attached a Populate Cache policy to what Apigee calls a **Conditional Route** (in this case, get employee by UUID).  This means that the caching logic will only take effect when a request is made following the pattern /{your proxy name}/{specific employee UUID}.  The XML below represents a slightly revised version of the standard policy, specifying a cache key, expiry, and source for the cache data.  For simplicity’s sake, our cache will be instructed to hold the employee ID being requested (albeit prepended with a forward slash).  For more information on this policy, see [Populate Cache](https://docs.apigee.com/api-services/reference/populate-cache-policy) in our docs.
+
+* Copy/paste the below XML into the config for your newly added Populate Cache policy.
+```		
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PopulateCache async="false" continueOnError="false" enabled="true" name="Populate-ID">
+    <DisplayName>Populate ID</DisplayName>
+    <Properties/>
+    <CacheKey>
+        <Prefix>EmployeeID</Prefix>
+        <KeyFragment>LastRequested</KeyFragment>
+    </CacheKey>
+    <Scope>Exclusive</Scope>
+    <ExpirySettings>
+        <TimeoutInSec>60</TimeoutInSec>
+    </ExpirySettings>
+    <Source>proxy.pathsuffix</Source>
+</PopulateCache>
 ```
-var latitude = context.getVariable("geocodeResponse.latitude"),
-    longitude = context.getVariable("geocodeResponse.longitude"),
-    radius = context.getVariable("radius");
-
-// set default (0 meters)
-radius = (radius === "") ? "0" : radius;
-
-// set BaaS query
-var baasQL = "location within " + radius + " of " + latitude + "," + longitude;
-context.setVariable("baasQL", baasQL);
-```
-
-This Javascript code uses the ‘context’ object, which is part of the [Apigee Edge Javascript object model](http://apigee.com/docs/api-services/reference/javascript-object-model) to retrieve 3 variables - geocodeResponse.latitude, geoCodeResponse.latitude, radius - that were set by policies earlier in the flow.
-
-It sets a default in case the variables are empty strings, creates a new query variable called ‘baasQL’ using the API BaaS query language syntax for a location query, and adds the ‘baasQL’ variable to the ‘context’ object to be used later in the flow by the Assign Message policy to set the query parameter before the API BaaS target endpoint is invoked.
-
-You can read more about this policy in [Javascript policy](http://apigee.com/docs/api-services/reference/javascript-policy).
-
-
-### Use the Assign Message Policy to add the Location Query to the query parameter before BaaS target endpoint invocation
-
-* Click on + Step
-
+* This time, click **+Step** on the **Response** side.
 ![Image](images/lab_appendix2/image13.png) 
-
-Scroll down the policy list and select **Assign Message** and update the default display name to **Set Query Parameters**
-
+* Add a **Lookup Cache** policy, changing the name to Lookup ID
 ![Image](images/lab_appendix2/image14.png) 
 
-Update the policy to include the **baasQL** as a query parameter and remove the zipcode and radius query parameters from the request.
+**What have we done here?**
+We’ve attached a Lookup Cache policy to the response flow of our route.  This policy will check the cache, by key name, for previously seeded data.  If it finds it, the data will be saved to a variable specified in the XML config.  The XML below represents a slightly revised version of the standard policy, specifying a cache key and variable name for storing the cached content.  For more information on this policy, see [Lookup Cache](https://docs.apigee.com/api-services/reference/lookup-cache-policy) in our docs.
 
-```
+* Copy/paste the below XML into the config for your newly added Populate Cache policy.
+```		
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<AssignMessage async="false" continueOnError="false" enabled="true" name="Set-Query-Parameters">
-    <DisplayName>Set Query Parameters</DisplayName>
-    <Remove>
-        <QueryParams>
-            <QueryParam name="zipcode"/>
-            <QueryParam name="radius"/>
-        </QueryParams>
-    </Remove>
-    <Set>
-        <QueryParams>
-            <QueryParam name="ql">{baasQL}</QueryParam>
-        </QueryParams>
-    </Set>
-</AssignMessage>
+<LookupCache async="false" continueOnError="false" enabled="true" name="Lookup-ID">
+    <DisplayName>Lookup ID</DisplayName>
+    <Properties/>
+    <CacheKey>
+        <Prefix>EmployeeID</Prefix>
+        <KeyFragment>LastRequested</KeyFragment>
+    </CacheKey>
+    <Scope>Exclusive</Scope>
+    <AssignTo>employeePathID</AssignTo>
+</LookupCache>
 ```
-
-
-Here's a brief description of the elements that were modified in this policy. You can read more about this policy in [Extract Variables policy](http://apigee.com/docs/api-services/reference/extract-variables-policy).
-- Removes the query parameters (‘zipcode’ and ‘radius’) that were sent in the original client request to the API Proxy.
-- Adds a new query parameter (‘**ql**’) with the variable **baasQL** providing the actual value. Note that the **baasQL** variable was set by the previous Javascript policy as part of the **context** object
-
-### Testing the API Proxy with the location query after deploying changes
-
-* Click on the **Save** button to save and deploy the changes to the API Proxy.
-
+* Save your configuration and wait for it to successfully deploy.  Then, switch to the Trace tab.
 ![Image](images/lab_appendix2/image15.png) 
+* Change the URL so that the following is appended to the end -- this will change your request to ask for a **specific order record**, invoking the cache logic we’ve just applied.  
+```
+/1234
+```
+* Start a **New Trace Session** and click **Send**.
+Your graph should look something like this, below.  Take note -- you have two new cache policies in effect.  One is populating the cache with the url suffix /{employee-id} -- and the other is looking up that value, by key name, in cache.  You can see proof of this in the assigned variable, employeePathID
+![Image](images/lab_appendix2/image16.png) 	
 
-* Go to the **Trace** tab and start a trace session by clicking the ‘Start Trace Session’ button
+Congratulations!  You’ve done a few cool things here -- defined a custom key for your new cache, seeded it with some data from the client request, and retrieved that data later in the flow.  On retrieving this data from cache, you’ve assigned it to a flow variable.  In a real life scenario, you could use this flow variable to drive conditional logic, or otherwise take action on the data retrieved from cache.  Nice work!
 
-![Image](images/lab_appendix2/image16.png) 
-
-* Using your browser or the Apigee REST Client, invoke the API with the following query parameter combinations and review the results being returned:
-	*   zipcode=31721&radius=20000
-	*   zipcode=31721&radius=500000
-	*   No query parameters
-
-**\*\*Note: radius is measured in meters**
-
-Example URL: [http://apigeedemovideos-test.apigee.net/v1/ap_employees?zipcode=31721&radius=20000](http://apigeedemovideos-test.apigee.net/v1/ap_employees?zipcode=31721&radius=20000)
