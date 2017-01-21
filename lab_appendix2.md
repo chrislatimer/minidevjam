@@ -31,7 +31,7 @@ In this lab, we will configure your proxy to cache the results of a request for 
 
 ![Image](images/lab_appendix2/image00.png) 
 
-* Select the **{your_initials}_employee_api_proxy** that you created in an earlier lab exercise.	
+* Select the **`{yourLDAP}-orders-rest-api`** that you created in an earlier lab exercise.	
 
 ![Image](images/lab_appendix2/image01.png) 
 	
