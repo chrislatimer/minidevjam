@@ -22,7 +22,7 @@ Here’s a breakdown of the Apigee Edge caching policies:
 In this lab, we will configure your proxy to cache the results of a request for 60 seconds at a time.  Once we’ve seen how this affects runtime performance, we’ll leverage the cache a different way -- explicitly defining the cache key and contents.  We’ll populate this cache with an employee ID and demonstrate how to retrieve this value from cache with a LookupCache policy. 
 
 ##Pre-requisites
-* You have an API proxy created in Apigee Edge. If not, jump back to “**Creating an API proxy**” lab.
+* You have an API proxy created in Apigee Edge. If not, jump back to [Lab 1 - Adding a new API Specification](lab1.md).
 
 ## Instructions
 ###Part 1 - Response Cache Policy
@@ -74,13 +74,14 @@ In this lab, we will configure your proxy to cache the results of a request for 
 ![Image](images/lab_appendix2/image05.png) 
 
 **A Quick Note on Cache Expiry, Resources**
+
 The expiry settings are quite flexible. You could, for example, set the expiry to a particular time of day - say 3:00am Pacific time each day. This allows you to hold a cache all day, and refresh it at the beginning of each day, for example. For more information, see [the cache documentation](http://apigee.com/docs/api-services/reference/response-cache-policy). 
 
 Apigee Edge provides a default cache resource that can be used for quick testing, which is what is being used in this lesson. Cache policies like ResponseCache can also used named cache resources. A Named cache resource can be manipulated administratively, outside of policy control. For examine, if you would like to clear a cache administratively, you can do that with a named cache resource. It takes just a moment. For more information on Cache Resources, see [Manage Caches for an Environment](http://apigee.com/docs/api-services/content/manage-caches-environment).
 
 * Click Target Endpoints → default → PostFlow.  Verify your cache policy appears here, as well -- on the Response side.  Then, save your proxy and wait for it to successfully deploy.
 
-![Image](images/lab_appendix2/image06.png) 
+	![Image](images/lab_appendix2/image06.png) 
 
 	
 * Switch to the **Trace** tab.  We’ll use this to test the caching we just configured for our proxy.  For more on Trace, see the Diagnostics - API Trace lab.  
@@ -136,8 +137,11 @@ We’ve attached a Populate Cache policy to what Apigee calls a **Conditional Ro
 </PopulateCache>
 ```
 * This time, click **+Step** on the **Response** side.
+
 ![Image](images/lab_appendix2/image13.png) 
+
 * Add a **Lookup Cache** policy, changing the name to Lookup ID
+
 ![Image](images/lab_appendix2/image14.png) 
 
 **What have we done here?**
@@ -157,14 +161,21 @@ We’ve attached a Lookup Cache policy to the response flow of our route.  This 
     <AssignTo>employeePathID</AssignTo>
 </LookupCache>
 ```
+
 * Save your configuration and wait for it to successfully deploy.  Then, switch to the Trace tab.
+
 ![Image](images/lab_appendix2/image15.png) 
+
 * Change the URL so that the following is appended to the end -- this will change your request to ask for a **specific order record**, invoking the cache logic we’ve just applied.  
+
 ```
 /1234
 ```
+
 * Start a **New Trace Session** and click **Send**.
+
 Your graph should look something like this, below.  Take note -- you have two new cache policies in effect.  One is populating the cache with the url suffix /{employee-id} -- and the other is looking up that value, by key name, in cache.  You can see proof of this in the assigned variable, employeePathID
+
 ![Image](images/lab_appendix2/image16.png) 	
 
 Congratulations!  You’ve done a few cool things here -- defined a custom key for your new cache, seeded it with some data from the client request, and retrieved that data later in the flow.  On retrieving this data from cache, you’ve assigned it to a flow variable.  In a real life scenario, you could use this flow variable to drive conditional logic, or otherwise take action on the data retrieved from cache.  Nice work!
