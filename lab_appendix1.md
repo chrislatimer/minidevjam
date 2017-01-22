@@ -55,7 +55,7 @@ In this lab, you will create a custom report to provide insight into the consump
 
 ![Image](images/lab_appendix1/image07.png)
 
-* You can further narrow the data displayed by adding filters to your report definition. In the **Filter** section of the page, click **+ Filter Condition**. Select Proxy as the entity you want to filter on, select = as the **Operator** and set the **Value** to your API Proxy name (e.g. “ap_employees”).
+* You can further narrow the data displayed by adding filters to your report definition. In the **Filter** section of the page, click **+ Filter Condition**. Select Proxy as the entity you want to filter on, select = as the **Operator** and set the **Value** to your API Proxy name (e.g. “apininja-orders”).
 
 ![Image](images/lab_appendix1/image08.png)
 

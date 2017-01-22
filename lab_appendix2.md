@@ -19,7 +19,7 @@ Here’s a breakdown of the Apigee Edge caching policies:
 | LookupCache     | Retrieve values that have been cached with the PopulateCache policy. [LookupCache](http://apigee.com/docs/api-services/reference/lookup-cache-policy).|
 | InvalidateCache | Purges values that have been cached by PopulateCache. [Invalidate Cache policy](http://apigee.com/docs/api-services/reference/invalidate-cache-policy).|
 
-In this lab, we will configure your proxy to cache the results of a request for 60 seconds at a time.  Once we’ve seen how this affects runtime performance, we’ll leverage the cache a different way -- explicitly defining the cache key and contents.  We’ll populate this cache with an employee ID and demonstrate how to retrieve this value from cache with a LookupCache policy. 
+In this lab, we will configure your proxy to cache the results of a request for 60 seconds at a time.  Once we’ve seen how this affects runtime performance, we’ll leverage the cache a different way -- explicitly defining the cache key and contents.  We’ll populate this cache with an order ID and demonstrate how to retrieve this value from cache with a LookupCache policy. 
 
 ##Pre-requisites
 * You have an API proxy created in Apigee Edge. If not, jump back to [Lab 1 - Adding a new API Specification](lab1.md).
@@ -31,7 +31,7 @@ In this lab, we will configure your proxy to cache the results of a request for 
 
 ![Image](images/lab_appendix2/image00.png) 
 
-* Select the **`{yourLDAP}-orders-rest-api`** that you created in an earlier lab exercise.	
+* Select the **`{yourLDAP}-orders-api`** that you created in an earlier lab exercise.	
 
 ![Image](images/lab_appendix2/image01.png) 
 	
@@ -43,7 +43,7 @@ In this lab, we will configure your proxy to cache the results of a request for 
 
 ![Image](images/lab_appendix2/image03.png) 		
 
-* Select **Response Cache**, rename to something descriptive like “Cache for Employees” and click on the **Add** button to add the Response Cache policy.
+* Select **Response Cache**, rename to something descriptive like “Cache for Orders” and click on the **Add** button to add the Response Cache policy.
 	
 ![Image](images/lab_appendix2/image04.png) 		
 
@@ -51,8 +51,8 @@ In this lab, we will configure your proxy to cache the results of a request for 
 
 ```
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<ResponseCache async="false" continueOnError="false" enabled="true" name="Cache-for-Employees">
-    <DisplayName>Cache for Employees</DisplayName>
+<ResponseCache async="false" continueOnError="false" enabled="true" name="Cache-for-Orders">
+    <DisplayName>Cache for Orders</DisplayName>
     <Properties/>
     <CacheKey>
         <Prefix/>
@@ -98,14 +98,14 @@ Apigee Edge provides a default cache resource that can be used for quick testing
 * Well done!  You’ve added a general purpose cache which will survive for 60 seconds, before repopulating on the next request made after that window.  Responses generated from cache spare your backend from serving those requests -- and are returned to clients far quicker than would non-cached responses.
 
 ## Part 2 - Populate Cache, Lookup Cache
-You’ve improved the performance of your API with some clever caching of employee information.  Let’s take things a step further.  There may be times when saving a bit of metadata (unrelated to response payload) to cache can be useful.  In this section of the lab, we’ll capture the path -- which includes employee ID -- as specific employee records are requested.  Then, we’ll show how to retrieve this cached path info with a simple Lookup Cache policy.
+You’ve improved the performance of your API with some clever caching of order information.  Let’s take things a step further.  There may be times when saving a bit of metadata (unrelated to response payload) to cache can be useful.  In this section of the lab, we’ll capture the path -- which includes order ID -- as specific order records are requested.  Then, we’ll show how to retrieve this cached path info with a simple Lookup Cache policy.
 
 * Return to the **Develop** tab to access the API Proxy development dashboard.
 * Change the expiry time on your Response Cache policy to 1s.  This will allow us to make multiple requests for Part II of the lab without triggering a cached response from our Part I work.
 
 ![Image](images/lab_appendix2/image09.png) 
 
-* Click Proxy Endpoints → default → Get an Employee with given UUID.
+* Click Proxy Endpoints → default → Get an Order with given UUID.
 
 ![Image](images/lab_appendix2/image10.png) 
 
@@ -117,7 +117,7 @@ You’ve improved the performance of your API with some clever caching of employ
 ![Image](images/lab_appendix2/image12.png) 
 
 **What have we done here?**
-We’ve attached a Populate Cache policy to what Apigee calls a **Conditional Route** (in this case, get employee by UUID).  This means that the caching logic will only take effect when a request is made following the pattern /{your proxy name}/{specific employee UUID}.  The XML below represents a slightly revised version of the standard policy, specifying a cache key, expiry, and source for the cache data.  For simplicity’s sake, our cache will be instructed to hold the employee ID being requested (albeit prepended with a forward slash).  For more information on this policy, see [Populate Cache](https://docs.apigee.com/api-services/reference/populate-cache-policy) in our docs.
+We’ve attached a Populate Cache policy to what Apigee calls a **Conditional Route** (in this case, get order by UUID).  This means that the caching logic will only take effect when a request is made following the pattern /{your proxy name}/{specific order UUID}.  The XML below represents a slightly revised version of the standard policy, specifying a cache key, expiry, and source for the cache data.  For simplicity’s sake, our cache will be instructed to hold the order ID being requested (albeit prepended with a forward slash).  For more information on this policy, see [Populate Cache](https://docs.apigee.com/api-services/reference/populate-cache-policy) in our docs.
 
 * Copy/paste the below XML into the config for your newly added Populate Cache policy.
 ```		
@@ -126,7 +126,7 @@ We’ve attached a Populate Cache policy to what Apigee calls a **Conditional Ro
     <DisplayName>Populate ID</DisplayName>
     <Properties/>
     <CacheKey>
-        <Prefix>EmployeeID</Prefix>
+        <Prefix>OrderID</Prefix>
         <KeyFragment>LastRequested</KeyFragment>
     </CacheKey>
     <Scope>Exclusive</Scope>
@@ -154,11 +154,11 @@ We’ve attached a Lookup Cache policy to the response flow of our route.  This 
     <DisplayName>Lookup ID</DisplayName>
     <Properties/>
     <CacheKey>
-        <Prefix>EmployeeID</Prefix>
+        <Prefix>OrderID</Prefix>
         <KeyFragment>LastRequested</KeyFragment>
     </CacheKey>
     <Scope>Exclusive</Scope>
-    <AssignTo>employeePathID</AssignTo>
+    <AssignTo>orderPathID</AssignTo>
 </LookupCache>
 ```
 
@@ -169,12 +169,12 @@ We’ve attached a Lookup Cache policy to the response flow of our route.  This 
 * Change the URL so that the following is appended to the end -- this will change your request to ask for a **specific order record**, invoking the cache logic we’ve just applied.  
 
 ```
-/1234
+{your_ldap}-orders-api/1234
 ```
 
 * Start a **New Trace Session** and click **Send**.
 
-Your graph should look something like this, below.  Take note -- you have two new cache policies in effect.  One is populating the cache with the url suffix /{employee-id} -- and the other is looking up that value, by key name, in cache.  You can see proof of this in the assigned variable, employeePathID
+Your graph should look something like this, below.  Take note -- you have two new cache policies in effect.  One is populating the cache with the url suffix /{order-id} -- and the other is looking up that value, by key name, in cache.  You can see proof of this in the assigned variable, orderPathID
 
 ![Image](images/lab_appendix2/image16.png) 	
 
