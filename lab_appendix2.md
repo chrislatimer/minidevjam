@@ -82,10 +82,11 @@ Apigee Edge provides a default cache resource that can be used for quick testing
 * Click Target Endpoints → default → PostFlow.  Verify your cache policy appears here, as well -- on the Response side.  Then, save your proxy and wait for it to successfully deploy.
 
 	![Image](images/lab_appendix2/image06.png) 
-
 	
 * Switch to the **Trace** tab.  We’ll use this to test the caching we just configured for our proxy.  For more on Trace, see the Diagnostics - API Trace lab.  
 * Start a new trace session and click **Send** multiple times (two or three) to fire a few test requests.
+
+	![Image](images/lab_appendix2/image061.png) 
 	
 * Note the difference between your first request and subsequent requests made within 60 seconds of the first (remember, this is the lifetime defined for your cache).  A few things should jump out at you:
 	* Response times reduced with cache.
@@ -169,7 +170,7 @@ We’ve attached a Lookup Cache policy to the response flow of our route.  This 
 * Change the URL so that the following is appended to the end -- this will change your request to ask for a **specific order record**, invoking the cache logic we’ve just applied.  
 
 ```
-{your_ldap}-orders-api/1234
+{your_ldap}-orders-api/1234?apikey={your-api-key-from-lab3}
 ```
 
 * Start a **New Trace Session** and click **Send**.
