@@ -14,3 +14,10 @@ Welcome to the Apigee mini hands on DevJam workshop.
 1. [Adding a new API Specification](lab1.md)
 2. [Traffic Management and Basic Security](lab2.md)
 3. [API Publishing and Consumption](lab3.md)
+
+# Appendix
+
+If you get done with all the standard labs and want to keep going, try out these additional hands-on exercises:
+
+1. [Custom Reporting](lab_appendix1.md)
+2. [Caching](lab_appendix2.md)
