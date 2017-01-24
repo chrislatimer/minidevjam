@@ -29,6 +29,10 @@ Welcome to the Apigee mini hands on DevJam workshop.
 
   ![Image](images/dashboard.png)
 
+  Once you are successfully in the Apigee Edge UI, make sure you are in the correct Apigee organization. For the 2:15pm session, you should be in demo7. For the 4:15 session you should be in demo19.
+
+  ![Image](images/change-org.png)
+
   You are now ready to get started on the labs.
 
 # Hands on Labs
