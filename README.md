@@ -23,7 +23,7 @@ Welcome to the Apigee mini hands on DevJam workshop.
 
   Once your account has been created, you need to be added to the Apigee environment we'll be using today. To get added, go to:
 
-  ## go/AddMeToOrg?id=email@google.com
+  # go/AddMeToOrg?id=email@google.com
 
   replacing `email@google.com` with your google email address. This link should add you to the Apigee Edge instance we'll be using today and redirect you to the Apigee Edge UI:
 
