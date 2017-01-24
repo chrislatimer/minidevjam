@@ -4,7 +4,7 @@ Welcome to the Apigee mini hands on DevJam workshop.
 
 # Getting Started
 
-  In this workshop, you will get first hand exposure to Apigee Edge, the industry's leading API Management platform. To get started with Apigee Edge, you will need to get access to an Apigee instance. 
+  In this workshop, you will get first hand exposure to Apigee Edge, the full featured enterprise API Management platform. To get started with Apigee Edge, you will need to get access to an Apigee instance. 
 
 
   If you're new to Apigee, visit this page to create an account: <a href="https://apigee.com/edge" target="_blank">https://apigee.com/edge</a>
@@ -15,14 +15,21 @@ Welcome to the Apigee mini hands on DevJam workshop.
 
   Select the _Create Account_ option. This will direct you to this registration form:
 
-  ![Image](images/registration-form.png) 
+  ![Image](images/registration-form-goog.png) 
 
   Fill in your information and select _Create account_ to submit your registration information. In a few minutes you will receive an email from Apigee with an email verification link:
 
-  Click on the _Activate your account_ link to be redirected to the Apigee sign in form. After signing in you will be presented with a number of options. 
+  ![Image](images/verify-email.png)
 
-  ![Image](images/account-options.png) 
+  Once your account has been created, you need to be added to the Apigee environment we'll be using today. To get added, go to:
 
+  ## go/AddMeToOrg?id=email@google.com
+
+  replacing `email@google.com` with your google email address. This link should add you to the Apigee Edge instance we'll be using today and redirect you to the Apigee Edge UI:
+
+  ![Image](images/dashboard.png)
+
+  You are now ready to get started on the labs.
 
 # Hands on Labs
 
